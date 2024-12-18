@@ -1,0 +1,5 @@
+--extra-index-url https://wheels.vtk.org
+pyvista[jupyter]==0.44.1
+numpy==1.26.0
+meshio==5.3.5
+vtk-osmesa==9.3.1
