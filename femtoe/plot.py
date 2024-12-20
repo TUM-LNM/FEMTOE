@@ -87,15 +87,13 @@ def get_stresses_mesh(
     return pv.from_meshio(stress_mesh)
 
 
-my_plotter = pv.Plotter(shape=(4, 1), window_size=(1024, 2304), off_screen=True)
-
-
 def plot(
     problem: PureBending,
     nodal_displacements: np.ndarray,
     scale_displacements: float = 1.0,
     use_pian_sumihara=False,
 ):
+    my_plotter = pv.Plotter(shape=(4, 1), window_size=(1024, 2304), off_screen=True)
     my_plotter.clear_actors()
 
     # plot displacements
@@ -144,6 +142,7 @@ def plot(
 
     my_plotter.screenshot("plot.png")
     display(Image(filename="plot.png"))
+    my_plotter.deep_clean()
 
 
 def compute_g_h_matrices(problem: PureBending, nodal_coordinates: np.ndarray):
