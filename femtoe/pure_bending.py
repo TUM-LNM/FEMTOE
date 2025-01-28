@@ -16,9 +16,13 @@ class PureBending:
         num_ele_x,
         num_ele_y,
         youngs_modulus: float,
-        nu: float
+        nu: float,
+        plain_stress: bool,
+        rho: float = 1.0,
     ):
-        self.mesh = get_mesh(num_ele_x=num_ele_x, num_ele_y=num_ele_y)
+        self.mesh = get_mesh(
+            length=width, height=height, num_ele_x=num_ele_x, num_ele_y=num_ele_y
+        )
 
         self.youngs_modulus = youngs_modulus
         self.nu = nu
@@ -26,6 +30,10 @@ class PureBending:
         self.traction = Traction(
             self.mesh, lambda x: 100e6 * np.array([1, 0]) * (-1 + 2 * x[1] / height)
         )
+
+        self.rho = rho
+
+        self.plain_stress = plain_stress
 
     @property
     def cell_type(self):
@@ -53,18 +61,31 @@ class PureBending:
 
     @property
     def constitutive_matrix(self):
-        # plain strain
-        return (
-            self.youngs_modulus
-            / ((1 + self.nu) * (1 - 2 * self.nu))
-            * np.array(
-                [
-                    [1 - self.nu, self.nu, 0],
-                    [self.nu, 1 - self.nu, 0],
-                    [0, 0, (1 - 2 * self.nu) / 2],
-                ]
+        if self.plain_stress:
+            return (
+                self.youngs_modulus
+                / (1 - self.nu**2)
+                * np.array(
+                    [
+                        [1, self.nu, 0],
+                        [self.nu, 1, 0],
+                        [0, 0, (1 - self.nu) / 2],
+                    ]
+                )
             )
-        )
+        else:
+            # plain strain
+            return (
+                self.youngs_modulus
+                / ((1 + self.nu) * (1 - 2 * self.nu))
+                * np.array(
+                    [
+                        [1 - self.nu, self.nu, 0],
+                        [self.nu, 1 - self.nu, 0],
+                        [0, 0, (1 - 2 * self.nu) / 2],
+                    ]
+                )
+            )
 
     def get_body_forces(self, x: np.ndarray):
         return np.array([0, 0])

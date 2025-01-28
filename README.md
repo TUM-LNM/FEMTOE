@@ -17,8 +17,9 @@ Then, you can start the Jupyter lab as follows:
 jupyter lab
 ```
 
-This should open your browser where you can open the exercises, e.g. `Locking.ipynb`.
+This should open your browser where you can open the exercises, e.g. `Locking.ipynb` or `Dynamics.ipynb`.
 
 ## Available exercises on binder
 
 * Locking: [![Binder](images/badge_logo.svg)](https://mybinder.org/v2/gh/TUM-LNM/FEMTOE/main?labpath=Locking.ipynb)
+* Dynamics: [![Binder](images/badge_logo.svg)](https://mybinder.org/v2/gh/TUM-LNM/FEMTOE/main?labpath=Dynamics.ipynb)

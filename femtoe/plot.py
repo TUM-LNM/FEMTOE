@@ -1,4 +1,3 @@
-import pyvista as pv
 import numpy as np
 import meshio
 from .pure_bending import PureBending
@@ -10,6 +9,8 @@ from IPython.display import Image, display
 
 
 def get_displacement_mesh(problem: PureBending, nodal_displacements: np.ndarray):
+    import pyvista as pv
+
     pyvista_mesh = pv.from_meshio(problem.mesh)
     pyvista_mesh.point_data["displacements"] = nodal_displacements.reshape((-1, 2))
     pyvista_mesh.point_data["displacements_3D"] = np.append(
@@ -84,6 +85,8 @@ def get_stresses_mesh(
     stress_mesh.point_data["stress_yy"] = np.array(stress_plot_nodal_stresses)[:, 1]
     stress_mesh.point_data["stress_xy"] = np.array(stress_plot_nodal_stresses)[:, 2]
 
+    import pyvista as pv
+
     return pv.from_meshio(stress_mesh)
 
 
@@ -93,6 +96,8 @@ def plot(
     scale_displacements: float = 1.0,
     use_pian_sumihara=False,
 ):
+    import pyvista as pv
+
     my_plotter = pv.Plotter(shape=(4, 1), window_size=(1024, 2304), off_screen=True)
     my_plotter.clear_actors()
 

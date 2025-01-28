@@ -6,6 +6,7 @@ from .shape_functions import (
     evaluate_shape_function_derivatives,
 )
 from .element import get_transformation, number_of_element_nodes
+from .assembly import assemble_vector
 
 
 def compute_element_force_vector_volume_forces(
@@ -81,3 +82,23 @@ def compute_element_force_vector_surface_traction(
         )
 
     return force_vector
+
+
+def evaluate_global_force_vector(problem) -> np.ndarray:
+    global_force_vector = np.zeros(problem.num_dof)
+
+    # Loop over all elements of the Neumann-surface
+    for cell in problem.traction.cells:
+        force_vector = compute_element_force_vector_surface_traction(
+            problem, problem.nodes[cell]
+        )
+
+        assemble_vector(
+            global_force_vector, force_vector, cell, problem.num_dof_per_node
+        )
+
+    dirichlet_dofs = problem.dirichlet_dofs
+    free_dofs = np.delete(np.arange(problem.num_dof), dirichlet_dofs)
+    global_force_vector = global_force_vector[free_dofs]
+
+    return global_force_vector
